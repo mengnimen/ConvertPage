@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>YAML转换</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 10px;
+            transition: background-color 0.5s, color 0.5s;
+        }
+        .container {
+            max-width: 600px;
+            margin: auto;
+            padding: 20px;
+        }
+        h1, h3 {
+            text-align: center;
+        }
+        .button {
+            display: block;
+            width: 100%;
+            padding: 10px 15px;
+            margin: 10px 0;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #output {
+            width: 95%;
+            height: 300px;
+            margin-top: 10px;
+            border: 1px solid #ccc;
+            padding: 10px;
+            overflow-y: auto;
+            background-color: white;
+            color: black;
+        }
+        @media (prefers-color-scheme: dark) {
+            body {
+                background-color: #333;
+                color: white;
+            }
+            #output {
+                background-color: #222;
+                color: lightgrey;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>仓键盘配置格式转换--by萌叔+ChatGPT</h1>
+        <input type="file" id="fileInput" />
+        <button onclick="transformYAML()" class="button">格式转换</button>
+        <h3>说明：上传2.2.0 版本以下键盘配置文件，点击文件转换即可</h3>
+        <button onclick="copyToClipboard()" class="button">点击复制</button>
+        <pre id="output"></pre>
+    </div>
+
+    <script>
+        function transformYAML() {
+            const fileInput = document.getElementById('fileInput');
+            if (fileInput.files.length === 0) {
+                alert('Please select a file.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                const transformedContent = applyTransformation(fileContent);
+                document.getElementById('output').textContent = transformedContent;
+            };
+            reader.readAsText(fileInput.files[0]);
+        }
+
+        function applyTransformation(yamlContent) {
+            let transformed = yamlContent
+                .replace(/action: shortCommand\(sendKeys\((.+?)\)\)/g, (match, keys) => `action: { shortcutCommand: { sendKeys: { keys: "${keys}" } } }`)
+                .replace(/- action: character\((\w)\)/g, (match, char) => `- action: { character: { char: ${char} } }`)
+                .replace(/- action: character\(([^a-zA-Z\d\s])\)/g, (match, char) => `- action: { character: { char: '${char}' } }`)
+                .replace(/- action: characterMargin\((\w)\)/g, (match, char) => `- action: { characterMargin: { char: "${char}" } }`)
+                .replace(/- action: keyboardType\(custom\((.+?)\)\)/g, (match, type) => `- action: { keyboardType: ${type} }`)
+                .replace(/- action: shortCommand\((.+?)\)/g, (match, command) => `- action: { shortcutCommand: "${command}" }`)
+                .replace(/width: percentage\((.+?)\)/g, (match, percentage) => `width: { percentage: ${percentage} }`)
+                .replace(/portrait: percentage\((.+?)\)/g, (match, percentage) => `portrait: { percentage: ${percentage} }`)
+                .replace(/landscape: percentage\((.+?)\)/g, (match, percentage) => `landscape: { percentage: ${percentage} }`)
+                .replace(/action: symbol\((.+?)\)/g, (match, symbol) => `action: { symbol: { char: ${symbol} } }`);
+
+            return transformed;
+        }
+
+        function copyToClipboard() {
+            const outputText = document.getElementById('output').textContent;
+            navigator.clipboard.writeText(outputText).then(() => {
+                alert('复制成功！');
+            }).catch(err => {
+                alert('Failed to copy: ', err);
+            });
+        }
+    </script>
+</body>
+</html>
