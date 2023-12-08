@@ -16,7 +16,7 @@
             margin: auto;
             padding: 20px;
         }
-        h1, h3 {
+        h1, h3, h5 {
             text-align: center;
         }
         .button {
@@ -61,6 +61,7 @@
         <input type="file" id="fileInput" />
         <button onclick="transformYAML()" class="button">格式转换</button>
         <h3>说明：上传2.2.0 版本以下键盘配置文件，点击格式转换即可</h3>
+        <h5>注意：本网页只支持饼干大佬网站生成的配置文件，其他配置可能要手动改一下再运行转换</h5>
         <button onclick="copyToClipboard()" class="button">点击复制</button>
         <pre id="output"></pre>
     </div>
@@ -69,7 +70,7 @@
         function transformYAML() {
             const fileInput = document.getElementById('fileInput');
             if (fileInput.files.length === 0) {
-                alert('Please select a file.');
+                alert('请选择文件');
                 return;
             }
 
@@ -87,6 +88,7 @@
                 .replace(/action: shortCommand\(sendKeys\((.+?)\)\)/g, (match, keys) => `action: { shortcutCommand: { sendKeys: { keys: "${keys}" } } }`)
                 .replace(/- action: character\((.*?)\)/g, (match, char) => `- action: { character: { char: '${char}' } }`)
                 .replace(/- action: characterMargin\((\w)\)/g, (match, char) => `- action: { characterMargin: { char: "${char}" } }`)
+                .replace(/- action: keyboardType\((.*?)\)/g, (match, type) => `- action: { keyboardType: ${type} }`)
                 .replace(/- action: keyboardType\(custom\((.+?)\)\)/g, (match, type) => `- action: { keyboardType: ${type} }`)
                 .replace(/- action: shortCommand\((.+?)\)/g, (match, command) => `- action: { shortcutCommand: "${command}" }`)
                 .replace(/width: percentage\((.+?)\)/g, (match, percentage) => `width: { percentage: ${percentage} }`)
