@@ -88,6 +88,7 @@
                 .replace(/action: shortCommand\(sendKeys\((.+?)\)\)/g, (match, keys) => `action: { shortcutCommand: { sendKeys: { keys: "${keys}" } } }`)
                 .replace(/- action: character\((.*?)\)/g, (match, char) => `- action: { character: { char: '${char}' } }`)
                 .replace(/- action: characterMargin\((\w)\)/g, (match, char) => `- action: { characterMargin: { char: "${char}" } }`)
+                .replace(/buttonInsets: left\((\d+)\),bottom\((\d+)\),top\((\d+)\),right\((\d+)\)/g, (match, left, bottom, top, right) => `buttonInsets: { left: ${left}, bottom: ${bottom}, top: ${top}, right: ${right} }`)
                 .replace(/- action: keyboardType\(custom\((.+?)\)\)/g, (match, type) => `- action: { keyboardType: ${type} }`)
                 .replace(/- action: keyboardType\((.*?)\)/g, (match, type) => `- action: { keyboardType: ${type} }`)
                 .replace(/- action: shortCommand\((.+?)\)/g, (match, command) => `- action: { shortcutCommand: "${command}" }`)
