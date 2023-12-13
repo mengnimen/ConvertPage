@@ -20,7 +20,7 @@
             margin: auto;
             padding: 20px;
         }
-        h1, h3, h5 {
+        h1, h3, h5, p{
             text-align: center;
         }
         .button {
@@ -62,8 +62,10 @@
 <body>
     <div class="container">
         <h1>仓键盘配置格式转换--by萌叔+ChatGPT</h1>
+        
         <input type="file" id="fileInput" />
         <button onclick="transformYAML()" class="button">格式转换</button>
+        <h3><p>饼干大佬的网站已经生成，请去<a href="https://lost-melody.github.io/hamster-tools" target="_blank" >这里</a>转换</p></h3>
         <h3>说明：上传2.2.0 版本以下键盘配置文件，点击格式转换即可</h3>
         <h5>注意：本网页只支持饼干大佬网站生成的配置文件，其他配置可能要手动改一下再运行转换</h5>
         <button onclick="copyToClipboard()" class="button">点击复制</button>
